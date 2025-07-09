@@ -1,3 +1,30 @@
-export default function MealsSlug() {
-    return <div>Meals Slug</div>
+import Image from 'next/image';
+import style from './page.module.css';
+import { getMeal } from '@/lib/meals';
+
+export default function MealsDetailPage({ params }) {
+    const meal = getMeal(params.slug);
+
+    meal.instructions = meal.instructions.replace(/\n/g, '<br />');
+
+    return <>
+        <header className={style.header}>
+            <div className={style.image}>
+                <Image src={meal.image} alt={meal.title} fill></Image>
+            </div>
+            <div className={style.headerText}>
+                <h1 >{meal.title}</h1>
+                <p className={style.creator}>
+                    by <a href={`mailto:${meal.creator_email}`}>{meal.creator}</a>
+                </p>
+                <p className={style.summary}>
+                    {meal.summary}
+                </p>
+            </div>
+        </header>
+        <main>
+            <p className={style.instructions}
+                dangerouslySetInnerHTML={{ __html: meal.instructions }}></p>
+        </main>
+    </>
 }
